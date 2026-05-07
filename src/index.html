@@ -496,6 +496,7 @@ var DB = {
       total_amount:     res.total_amount || 0,
       rejection_reason: res.rejection_reason || '',
       notes:            res.notes || null,
+      payment_slip:     res.payment_slip || null,
       requested_at:     res.requested_at || new Date().toISOString()
     };
     var { data, error } = await _supa.from('reservations').upsert(row).select().single();
@@ -708,6 +709,22 @@ var SS = {
 
 function genUID(){ return Math.random().toString(36).slice(2,10).toUpperCase(); }
 function nowISO(){ return new Date().toISOString(); }
+function compressImage(file,maxW,maxH,quality){
+  return new Promise(function(resolve){
+    var url=URL.createObjectURL(file);
+    var img=new Image();
+    img.onload=function(){
+      var scale=Math.min(maxW/img.width,maxH/img.height,1);
+      var c=document.createElement('canvas');
+      c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL('image/jpeg',quality));
+    };
+    img.onerror=function(){ URL.revokeObjectURL(url); resolve(null); };
+    img.src=url;
+  });
+}
 function getEl(id){ return document.getElementById(id); }
 function fmtDate(d){ return d ? new Date(d).toLocaleString() : ''; }
 function fmtTime(d){ return d ? new Date(d).toLocaleTimeString() : 'Just now'; }
@@ -1872,6 +1889,8 @@ async function renderReservations(container){
       list+='<div style="font-size:12px;color:#666;margin-top:2px">'+r.email+'</div>';
       list+='<div style="font-size:12px;color:#888;margin-top:4px">Ref: <span style="font-family:monospace;color:var(--text)">'+r.ref+'</span></div>';
       if(r.notes) list+='<div style="font-size:12px;color:var(--amber);margin-top:3px">&#x1F4DD; '+r.notes+'</div>';
+      if(r.payment_slip) list+='<button class="btn-ghost btn-xs btn-purple" data-slip="'+r.id+'" style="margin-top:6px">&#x1F4F7; View Transfer Slip</button>';
+      else list+='<span style="font-size:11px;color:#444;margin-top:6px;display:inline-block">No slip uploaded</span>';
       if(!evId) list+='<div style="font-size:11px;color:var(--blue);margin-top:2px">&#x1F4C5; '+ev.name+'</div>';
       list+='</div>';
       list+='<span class="res-status-badge '+r.status+'">'+r.status.toUpperCase()+'</span>';
@@ -1897,6 +1916,14 @@ async function renderReservations(container){
       list+='</div></div></div>';
     });
     listEl.innerHTML=list;
+    listEl.querySelectorAll('[data-slip]').forEach(function(btn){
+      btn.onclick=function(){
+        var r=rsvs.find(function(x){ return x.id===btn.dataset.slip; });
+        if(!r||!r.payment_slip) return;
+        var w=window.open('','_blank','width=900,height=700,resizable=yes');
+        w.document.write('<html><head><title>Transfer Slip — '+r.ref+'</title></head><body style="margin:0;background:#111;display:flex;flex-direction:column;align-items:center;min-height:100vh;font-family:sans-serif"><div style="padding:16px;color:#888;font-size:13px">'+r.ref+' &mdash; '+r.name+'</div><img src="'+r.payment_slip+'" style="max-width:100%;max-height:calc(100vh - 60px);object-fit:contain"></body></html>');
+      };
+    });
     listEl.querySelectorAll('.btn-approve').forEach(function(btn){
       btn.onclick=async function(){
         var res=rsvs.find(function(r){ return r.id===btn.dataset.id; }); if(!res) return;
@@ -1981,7 +2008,7 @@ async function renderReservations(container){
         try {
           res.status='rejected'; res.rejection_reason=reason||'Request rejected.';
           await DB.saveReservation(res);
-          await DB.updateSeatsStatus(res.seat_ids,'available');
+          await _supa.rpc('release_held_seats',{p_seat_ids:res.seat_ids||[]}).catch(function(){});
           var session3=AUTH.session();
           await DB.logActivity(res.event_id,'Reservation rejected','Ref: '+res.ref+' | '+res.name+' | Reason: '+res.rejection_reason,session3?session3.userId:null);
           toast('Reservation rejected, seats released ✓');
@@ -2690,6 +2717,13 @@ function showPublicReserveForm(ev,selectedSeats){
     html+='<div style="font-size:13px;color:#ccc;line-height:1.6">'+ev.booking_message+'</div>';
     html+='</div>';
   }
+  // Payment slip upload
+  html+='<div style="margin-bottom:16px">';
+  html+='<div style="font-size:11px;color:#555;letter-spacing:1px;margin-bottom:6px">PAYMENT SLIP <span style="color:#444">(optional — upload after transferring)</span></div>';
+  html+='<div style="font-size:12px;color:#666;margin-bottom:8px">Upload a screenshot of your bank transfer receipt so the organiser can verify faster.</div>';
+  html+='<input type="file" accept="image/*" id="pub-slip" class="form-input" style="padding:6px 0">';
+  html+='<div id="slip-preview" style="margin-top:8px"></div>';
+  html+='</div>';
   // Discount code input
   html+='<div style="margin-bottom:16px">';
   html+='<div style="font-size:11px;color:#555;letter-spacing:1px;margin-bottom:8px">DISCOUNT CODE (optional)</div>';
@@ -2721,14 +2755,39 @@ function showPublicReserveForm(ev,selectedSeats){
     }
   };
 
+  // Slip preview
+  var slipEl=getEl('pub-slip');
+  if(slipEl) slipEl.onchange=function(){
+    var f=slipEl.files[0]; var prev=getEl('slip-preview'); if(!prev) return;
+    if(!f){ prev.innerHTML=''; return; }
+    if(f.size>8*1024*1024){ toast('Image too large — max 8 MB.',3000); slipEl.value=''; prev.innerHTML=''; return; }
+    var url=URL.createObjectURL(f);
+    prev.innerHTML='<img src="'+url+'" style="max-width:100%;max-height:160px;border-radius:6px;border:1px solid #333;object-fit:contain">';
+  };
+
   getEl('btn-pub-submit').onclick=async function(){
     var name=getEl('pub-name').value.trim(), phone=getEl('pub-phone').value.trim(), email=getEl('pub-email').value.trim();
     if(!name||!phone||!email){ toast('Please fill in all fields.',3000); return; }
     var btn=getEl('btn-pub-submit'); btn.disabled=true; btn.textContent='Processing…';
-    if(selectedSeats.length>0) await DB.updateSeatsStatus(selectedSeats.map(function(s){ return s.id; }),'held');
+
+    // Compress slip if provided
+    var paymentSlip=null;
+    var slipF=getEl('pub-slip'); if(slipF&&slipF.files[0]) paymentSlip=await compressImage(slipF.files[0],1400,1000,0.82);
+
+    // Atomically hold seats via security-definer RPC (bypasses RLS for public users)
+    if(selectedSeats.length>0){
+      var seatIds=selectedSeats.map(function(s){ return s.id; });
+      var hr=await _supa.rpc('hold_seats',{p_seat_ids:seatIds}).catch(function(){ return {data:null}; });
+      if(!hr.data||!hr.data.ok){
+        toast('Sorry — one or more seats were just taken. Please go back and choose again.',5000);
+        btn.disabled=false; btn.textContent='Confirm Reservation →';
+        return;
+      }
+    }
+
     var ref='BKG-'+genUID().slice(0,6);
     var finalTotal=appliedDiscount?discountedTotal:total;
-    var res={ id:genUID(), ref:ref, event_id:ev.id, name:name, phone:phone, email:email, seat_ids:selectedSeats.map(function(s){ return s.id; }), status:'pending', total_amount:finalTotal||0, requested_at:nowISO(), rejection_reason:'', ticket_ids:[], discount_code:appliedDiscount?appliedDiscount.code:null };
+    var res={ id:genUID(), ref:ref, event_id:ev.id, name:name, phone:phone, email:email, seat_ids:selectedSeats.map(function(s){ return s.id; }), status:'pending', total_amount:finalTotal||0, requested_at:nowISO(), rejection_reason:'', ticket_ids:[], discount_code:appliedDiscount?appliedDiscount.code:null, payment_slip:paymentSlip };
     await DB.saveReservation(res);
     if(appliedDiscount) await DB.incrementDiscountUse(appliedDiscount.id).catch(function(){});
     renderPublicConfirmation(ref,ev,selectedSeats,finalTotal);
