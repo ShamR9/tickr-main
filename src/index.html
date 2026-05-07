@@ -1041,8 +1041,10 @@ var SEATING=(function(){
       var rows=grouped[section];
       var secDef=(layout.sections||[]).find(function(s){ return s.name===section; });
       var col=(TYPES[secDef?secDef.seatType:'standard']||TYPES.standard).color;
+      var rowOrder=secDef?parseRange(secDef.rowStart,secDef.rowEnd,secDef.rowType).map(String):Object.keys(rows);
+      var sortedRows=Object.keys(rows).sort(function(a,b){ var ai=rowOrder.indexOf(a),bi=rowOrder.indexOf(b); return (ai<0?999:ai)-(bi<0?999:bi); });
       html+='<div class="map-section"><div class="map-section-title" style="color:'+col+'">'+section+'</div>';
-      Object.keys(rows).forEach(function(rowLabel){
+      sortedRows.forEach(function(rowLabel){
         html+='<div class="map-row"><span class="row-label">'+rowLabel+'</span><div class="row-seats">';
         rows[rowLabel].forEach(function(seat){
           html+='<button class="seat-btn seat-'+seat.seat_type+' status-'+seat.status+'" data-id="'+seat.id+'" data-avail="'+(seat.status==='available'?'1':'0')+'" title="'+seat.section+' · Row '+seat.row_label+' · Seat '+seat.seat_number+'&#10;'+TYPES[seat.seat_type].label+' · $'+seat.price+'&#10;Status: '+STATUS[seat.status].label+'">'+seat.seat_number+'</button>';
@@ -1091,7 +1093,7 @@ var SEATING=(function(){
     });
   }
 
-  return { renderManager:renderManager, TYPES:TYPES, genSeats:genSeats };
+  return { renderManager:renderManager, TYPES:TYPES, genSeats:genSeats, parseRange:parseRange };
 })();
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -2615,8 +2617,10 @@ async function renderPublicEvent(eventId){
         var rows=grouped[section], lay=layouts[0];
         var secDef=lay?(lay.sections||[]).find(function(s){ return s.name===section; }):null;
         var col=(SEATING.TYPES[secDef?secDef.seatType:'standard']||SEATING.TYPES.standard).color;
+        var rowOrder=secDef?SEATING.parseRange(secDef.rowStart,secDef.rowEnd,secDef.rowType).map(String):Object.keys(rows);
+        var sortedRows=Object.keys(rows).sort(function(a,b){ var ai=rowOrder.indexOf(a),bi=rowOrder.indexOf(b); return (ai<0?999:ai)-(bi<0?999:bi); });
         html+='<div style="margin-bottom:20px"><div style="font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:8px;color:'+col+'">'+section+'</div>';
-        Object.keys(rows).forEach(function(rowLabel){
+        sortedRows.forEach(function(rowLabel){
           html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:11px;color:#555;width:20px;text-align:center;font-weight:700">'+rowLabel+'</span><div style="display:flex;gap:4px">';
           rows[rowLabel].forEach(function(seat){
             var isAvail=seat.status==='available';
