@@ -33,6 +33,8 @@ create index if not exists discount_codes_event_id_idx on public.discount_codes(
 create index if not exists discount_codes_code_idx     on public.discount_codes(event_id, code);
 
 alter table public.discount_codes enable row level security;
+drop policy if exists "Org/admin can manage discount codes" on public.discount_codes;
+drop policy if exists "Public can read active discount codes" on public.discount_codes;
 create policy "Org/admin can manage discount codes"
   on public.discount_codes for all
   using (
@@ -56,6 +58,8 @@ create index if not exists activity_log_event_id_idx on public.activity_log(even
 create index if not exists activity_log_created_idx  on public.activity_log(created_at desc);
 
 alter table public.activity_log enable row level security;
+drop policy if exists "Org/admin can read activity log" on public.activity_log;
+drop policy if exists "Authenticated can insert activity log" on public.activity_log;
 create policy "Org/admin can read activity log"
   on public.activity_log for select
   using (
@@ -80,6 +84,8 @@ create table if not exists public.waitlist (
 create index if not exists waitlist_event_id_idx on public.waitlist(event_id);
 
 alter table public.waitlist enable row level security;
+drop policy if exists "Org/admin can manage waitlist" on public.waitlist;
+drop policy if exists "Anyone can join waitlist" on public.waitlist;
 create policy "Org/admin can manage waitlist"
   on public.waitlist for all
   using (
