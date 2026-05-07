@@ -873,8 +873,15 @@ var SEATING=(function(){
 
   function parseRange(start,end,type){
     var r=[];
-    if(type==='alpha'){ var a=(start||'A').toUpperCase().charCodeAt(0),b=(end||'A').toUpperCase().charCodeAt(0); for(var i=a;i<=b;i++) r.push(String.fromCharCode(i)); }
-    else { var s=parseInt(start)||1,e2=parseInt(end)||s; for(var i=s;i<=e2;i++) r.push(i); }
+    if(type==='alpha'){
+      var a=(start||'A').toUpperCase().charCodeAt(0),b=(end||'A').toUpperCase().charCodeAt(0);
+      if(a<=b){ for(var i=a;i<=b;i++) r.push(String.fromCharCode(i)); }
+      else     { for(var i=a;i>=b;i--) r.push(String.fromCharCode(i)); }
+    } else {
+      var s=parseInt(start)||1,e2=parseInt(end)||s;
+      if(s<=e2){ for(var i=s;i<=e2;i++) r.push(i); }
+      else      { for(var i=s;i>=e2;i--) r.push(i); }
+    }
     return r;
   }
   function genSeats(section,layoutId,eventId){
