@@ -1518,7 +1518,9 @@ function showSeatPickerModal(availableSeats, originalSeat){
 }
 
 function buildTicketsView(container,tickets){
-  var ev=STATE.activeEvent, checked=tickets.filter(function(t){ return t.checked_in; }).length;
+  var ev=STATE.activeEvent;
+  var activeTickets=tickets.filter(function(t){ return !t.cancelled; });
+  var checked=activeTickets.filter(function(t){ return t.checked_in; }).length;
   var filtered=tickets
     .filter(function(t){ if(STATE.ticketFilter==='checked') return t.checked_in&&!t.cancelled; if(STATE.ticketFilter==='pending') return !t.checked_in&&!t.cancelled; if(STATE.ticketFilter==='cancelled') return t.cancelled===true; return true; })
     .filter(function(t){ return !STATE.ticketSearch||(t.code||'').toUpperCase().includes(STATE.ticketSearch.toUpperCase())||(t.holder||'').toUpperCase().includes(STATE.ticketSearch.toUpperCase()); });
@@ -1573,13 +1575,14 @@ function buildTicketsView(container,tickets){
     ticketRowsHTML+='</div>';
   });
   if(filtered.length>500) ticketRowsHTML+='<p style="text-align:center;color:#444;font-size:12px;padding:12px">Showing 500 of '+filtered.length+'</p>';
-  var capCard=capacity>0?'<div class="stat-card"><div class="stat-value" style="color:var(--purple)">'+Math.max(0,capacity-tickets.length)+'</div><div class="stat-label">Remaining</div></div>':'';
+  var activeCount=activeTickets.length;
+  var capCard=capacity>0?'<div class="stat-card"><div class="stat-value" style="color:var(--purple)">'+Math.max(0,capacity-activeCount)+'</div><div class="stat-label">Remaining</div></div>':'';
   var filterBtns=['all','pending','checked','cancelled'].map(function(f){ return '<button class="btn-ghost filter-btn'+(STATE.ticketFilter===f?' active':'')+'" data-filter="'+f+'">'+f[0].toUpperCase()+f.slice(1)+'</button>'; }).join('');
   var dlFilterBtn=(filtered.length>0&&filtered.length<tickets.length)?'<button class="btn-ghost btn-sm btn-purple" id="btn-dl-filt">&#11015; Filtered ('+filtered.length+')</button>':'';
 
   container.innerHTML=
     '<div class="page-header"><div><h2 class="page-title" style="font-size:22px">&#x1F3AB; Issued Tickets</h2><p class="page-subtitle">'+ev.name+'</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-primary" id="btn-gen-tix">+ Generate</button>'+(tickets.length?'<button class="btn-ghost btn-purple" id="btn-dl-all">&#11015; All ('+tickets.length+')</button><button class="btn-ghost" id="btn-dl-csv">&#11015; CSV</button>':'')+' </div></div>'+
-    '<div class="stats-row"><div class="stat-card"><div class="stat-value">'+tickets.length+'</div><div class="stat-label">Issued</div></div><div class="stat-card"><div class="stat-value" style="color:var(--green)">'+checked+'</div><div class="stat-label">Checked In</div></div><div class="stat-card"><div class="stat-value" style="color:var(--amber)">'+(tickets.length-checked)+'</div><div class="stat-label">Not Scanned</div></div><div class="stat-card"><div class="stat-value" style="color:var(--accent)">'+(tickets.length?Math.round((checked/tickets.length)*100)+'%':'—')+'</div><div class="stat-label">Rate</div></div>'+capCard+'</div>'+
+    '<div class="stats-row"><div class="stat-card"><div class="stat-value">'+activeCount+'</div><div class="stat-label">Issued</div></div><div class="stat-card"><div class="stat-value" style="color:var(--green)">'+checked+'</div><div class="stat-label">Checked In</div></div><div class="stat-card"><div class="stat-value" style="color:var(--amber)">'+(activeCount-checked)+'</div><div class="stat-label">Not Scanned</div></div><div class="stat-card"><div class="stat-value" style="color:var(--accent)">'+(activeCount?Math.round((checked/activeCount)*100)+'%':'—')+'</div><div class="stat-label">Rate</div></div>'+capCard+'</div>'+
     '<div class="availability-block"><div class="availability-title">&#x1F4CA; Availability &amp; Progress</div>'+(showSeatProg?sectionRowsHTML:'')+gaRowHTML+(!showSeatProg&&!showGAProg?'<p style="color:#444;font-size:13px;text-align:center;padding:12px 0">No tickets issued yet.</p>':'')+' </div>'+
     '<div class="filter-row"><input type="text" id="tix-search" class="form-input" style="width:220px" placeholder="Search code or name…" value="'+STATE.ticketSearch+'">'+filterBtns+dlFilterBtn+'</div>'+
     (filtered.length===0?'<div class="empty-state" style="padding:50px 0"><div class="empty-icon" style="font-size:44px">&#x1F3AB;</div><div class="empty-title">'+(tickets.length===0?'No tickets yet. Click + Generate.':'No tickets match filter.')+'</div></div>':'<div class="ticket-list">'+ticketRowsHTML+'</div>');
@@ -1780,7 +1783,7 @@ async function showGenerateModal(pickedSeats){
   if(!evTicketsUnlocked(ev)){ toast('⚠️ Event must be approved before tickets can be generated.', 4000); return; }
   var allSeats=(_cache.seats||[]).filter(function(s){ return s.event_id===ev.id; });
   var availSeats=allSeats.filter(function(s){ return s.status==='available'; });
-  var issuedCount=(_cache.tickets||[]).filter(function(t){ return t.event_id===ev.id; }).length;
+  var issuedCount=(_cache.tickets||[]).filter(function(t){ return t.event_id===ev.id && !t.cancelled; }).length;
   var capacity=ev.capacity||0, seatingMode=ev.seatingMode||'free';
   var fromMap=!!(pickedSeats&&pickedSeats.length>0);
 
