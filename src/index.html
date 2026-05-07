@@ -1485,6 +1485,38 @@ async function renderTickets(container){
   buildTicketsView(container,tickets);
 }
 
+function showSeatPickerModal(availableSeats, originalSeat){
+  return new Promise(function(resolve){
+    var overlay=document.createElement('div');
+    overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+    var grouped={};
+    availableSeats.forEach(function(s){ if(!grouped[s.section]) grouped[s.section]={}; if(!grouped[s.section][s.row_label]) grouped[s.section][s.row_label]=[]; grouped[s.section][s.row_label].push(s); });
+    Object.values(grouped).forEach(function(rows){ Object.values(rows).forEach(function(row){ row.sort(function(a,b){ return (parseInt(a.seat_number)||0)-(parseInt(b.seat_number)||0); }); }); });
+    var ih='<div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:24px;max-width:660px;width:100%;max-height:80vh;overflow-y:auto">';
+    ih+='<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px">Choose a New Seat</div>';
+    if(originalSeat) ih+='<div style="font-size:12px;color:#666;margin-bottom:4px">Original seat ('+originalSeat.section+(originalSeat.row_label?' · Row '+originalSeat.row_label:'')+' #'+originalSeat.seat_number+') is no longer available.</div>';
+    ih+='<div style="font-size:12px;color:#555;margin-bottom:16px">'+availableSeats.length+' available seat'+(availableSeats.length!==1?'s':'')+' — click to assign</div>';
+    Object.keys(grouped).forEach(function(section){
+      var rows=grouped[section];
+      ih+='<div style="margin-bottom:16px"><div style="font-size:11px;font-weight:700;color:#888;letter-spacing:1px;margin-bottom:8px">'+section+'</div>';
+      Object.keys(rows).forEach(function(row){
+        ih+='<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px"><span style="font-size:10px;color:#555;width:18px;text-align:center;font-weight:700">'+row+'</span>';
+        rows[row].forEach(function(s){ ih+='<button class="seat-btn seat-'+(s.seat_type||'standard')+' status-available" data-pick="'+s.id+'" title="'+section+(row?' R'+row:'')+' #'+s.seat_number+' · $'+s.price+'">'+s.seat_number+'</button>'; });
+        ih+='</div>';
+      });
+      ih+='</div>';
+    });
+    ih+='<div style="margin-top:16px;display:flex;justify-content:flex-end"><button id="sp-cancel" class="btn-ghost">Cancel</button></div></div>';
+    overlay.innerHTML=ih;
+    document.body.appendChild(overlay);
+    overlay.querySelectorAll('[data-pick]').forEach(function(btn){
+      btn.onclick=function(){ var seat=availableSeats.find(function(s){ return s.id===btn.dataset.pick; }); document.body.removeChild(overlay); resolve(seat||null); };
+    });
+    overlay.querySelector('#sp-cancel').onclick=function(){ document.body.removeChild(overlay); resolve(null); };
+    overlay.onclick=function(e){ if(e.target===overlay){ document.body.removeChild(overlay); resolve(null); } };
+  });
+}
+
 function buildTicketsView(container,tickets){
   var ev=STATE.activeEvent, checked=tickets.filter(function(t){ return t.checked_in; }).length;
   var filtered=tickets
@@ -1498,7 +1530,7 @@ function buildTicketsView(container,tickets){
     if(s.status==='sold') sectionStats[s.section].sold++;
     if(s.status==='reserved') sectionStats[s.section].reserved++;
   });
-  var gaTickets=tickets.filter(function(t){ return !t.seat_id; });
+  var gaTickets=tickets.filter(function(t){ return !t.seat_id && !t.cancelled; });
   var gaChecked=gaTickets.filter(function(t){ return t.checked_in; }).length;
   var sectionList=Object.values(sectionStats);
   var capacity=ev.capacity||0, seatingMode=ev.seatingMode||'free';
@@ -1595,46 +1627,41 @@ function buildTicketsView(container,tickets){
       var ev=STATE.activeEvent;
       btn.disabled=true; btn.textContent='Checking…';
       try {
-        // If allocated seating, check seat isn't taken by another active ticket
+        var newSeatId=seatId;
         if(seatId){
           var currentTix=await DB.getTickets(ev.id);
-          var seatTaken=currentTix.some(function(x){ return x.seat_id===seatId && !x.cancelled && x.id!==tId; });
-          if(seatTaken){
-            toast('Cannot reinstate — seat has been allocated to another ticket.',5000);
-            btn.disabled=false; btn.textContent='↺ Reinstate';
-            return;
-          }
-          // Also check current seat status
           var seatData=(_cache.seats||[]).find(function(s){ return s.id===seatId; });
-          if(seatData&&seatData.status!=='available'){
-            var proceed=confirm(
-              'Reinstate ticket for code: '+code+'?\n\n'+
-              'Note: The seat is currently marked as "'+seatData.status+'" — reinstating will set it back to "sold".\n\n'+
-              'Proceed?'
-            );
-            if(!proceed){ btn.disabled=false; btn.textContent='↺ Reinstate'; return; }
+          var seatTaken=currentTix.some(function(x){ return x.seat_id===seatId && !x.cancelled && x.id!==tId; });
+          var seatUnavailable=seatTaken||(seatData&&['sold','reserved','held'].includes(seatData.status));
+          if(seatUnavailable){
+            var available=(_cache.seats||[]).filter(function(s){ return s.event_id===ev.id && s.status==='available'; });
+            if(available.length===0){
+              toast('Cannot reinstate — original seat is taken and no seats are available.',5000);
+              btn.disabled=false; btn.textContent='↺ Reinstate'; return;
+            }
+            var picked=await showSeatPickerModal(available, seatData||{section:'',row_label:'',seat_number:seatId});
+            if(!picked){ btn.disabled=false; btn.textContent='↺ Reinstate'; return; }
+            newSeatId=picked.id;
           } else {
-            if(!confirm('Reinstate ticket '+code+'? The ticket will become valid again and the seat will be marked as sold.')) {
+            if(!confirm('Reinstate ticket '+code+'? The seat will be marked as sold again.')) {
               btn.disabled=false; btn.textContent='↺ Reinstate'; return;
             }
           }
-          // Restore seat to sold
-          await _supa.from('seats').update({status:'sold'}).eq('id',seatId);
+          await _supa.from('seats').update({status:'sold'}).eq('id',newSeatId);
         } else {
-          // Free seating — just confirm and reinstate
           if(!confirm('Reinstate ticket '+code+'? The ticket will become valid again.')) {
             btn.disabled=false; btn.textContent='↺ Reinstate'; return;
           }
         }
-        // Mark ticket as not cancelled
-        await _supa.from('tickets').update({cancelled:false}).eq('id',tId);
-        if(t){ t.cancelled=false; }
-        // Update cache
-        var s=(_cache.seats||[]).find(function(x){ return x.id===seatId; });
+        var updateData={cancelled:false};
+        if(newSeatId!==seatId) updateData.seat_id=newSeatId;
+        await _supa.from('tickets').update(updateData).eq('id',tId);
+        if(t){ t.cancelled=false; if(newSeatId!==seatId) t.seat_id=newSeatId; }
+        var s=(_cache.seats||[]).find(function(x){ return x.id===newSeatId; });
         if(s) s.status='sold';
         buildTicketsView(container,tickets);
         var sess=AUTH.session();
-        await DB.logActivity(ev.id,'Ticket reinstated','Code: '+code,sess?sess.userId:null);
+        await DB.logActivity(ev.id,'Ticket reinstated','Code: '+code+(newSeatId!==seatId?' (new seat assigned)':''),sess?sess.userId:null);
         toast('Ticket reinstated ✓');
       } catch(err){ toast('Error: '+err.message,5000); btn.disabled=false; btn.textContent='↺ Reinstate'; }
     };
