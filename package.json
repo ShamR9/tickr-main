@@ -1,0 +1,20 @@
+{
+  "name": "tickr",
+  "version": "1.0.0",
+  "description": "TICKR — Event ticketing platform",
+  "private": true,
+  "scripts": {
+    "dev": "npx vercel dev",
+    "deploy": "npx vercel --prod",
+    "inject-env": "node scripts/inject-env.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "vercel": "^33.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

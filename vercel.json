@@ -1,0 +1,8 @@
+{
+  "buildCommand": "node scripts/inject-env.js",
+  "outputDirectory": "src",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
