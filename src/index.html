@@ -240,16 +240,16 @@ select.form-input option{background:#222}
 #main.pub-mode{padding:0;max-width:100%}
 .pub-cinema-nav{height:60px;background:#000000ee;backdrop-filter:blur(14px);border-bottom:1px solid #1a1a1a;display:flex;align-items:center;padding:0 32px;gap:20px;position:sticky;top:0;z-index:200}
 .pub-cinema-logo{font-family:Impact,sans-serif;font-size:22px;color:#e94560;letter-spacing:4px;cursor:pointer;user-select:none}
-.pub-hero-section{position:relative;height:480px;overflow:hidden}
-.pub-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(8px) brightness(.3);transform:scale(1.08)}
-.pub-hero-vgrad{position:absolute;inset:0;background:linear-gradient(to top,#0d0d0d 0%,transparent 55%)}
-.pub-hero-body{position:relative;z-index:2;height:100%;display:flex;align-items:flex-end;padding:0 40px 44px;gap:28px;max-width:1140px;margin:0 auto}
-.pub-hero-poster{width:130px;height:195px;border-radius:10px;object-fit:cover;flex-shrink:0;box-shadow:0 8px 40px #000c;border:1px solid #ffffff18}
-.pub-hero-poster-ph{width:130px;height:195px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:42px;border:1px solid #333}
-.pub-hero-text{flex:1}
-.pub-hero-cat{font-size:10px;font-weight:700;letter-spacing:2px;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:10px}
-.pub-hero-title{font-size:40px;font-weight:900;line-height:1.05;margin-bottom:8px;text-shadow:0 2px 16px #000}
+.pub-hero-section{display:flex;height:500px;background:#0d0d0d;overflow:hidden;position:relative}
+.pub-hero-left{flex:0 0 340px;position:relative;overflow:hidden;flex-shrink:0}
+.pub-hero-left-img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.pub-hero-left-fade{position:absolute;inset:0;background:linear-gradient(to right,transparent 50%,#0d0d0d 100%)}
+.pub-hero-left-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:72px;background:linear-gradient(135deg,#1a1a1a,#0d0d0d)}
+.pub-hero-right{flex:1;display:flex;flex-direction:column;justify-content:center;padding:40px 40px 40px 0}
+.pub-hero-cat{font-size:10px;font-weight:700;letter-spacing:2px;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:12px}
+.pub-hero-title{font-size:38px;font-weight:900;line-height:1.05;margin-bottom:10px}
 .pub-hero-meta{font-size:13px;color:#aaa;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:16px}
+@media(max-width:640px){.pub-hero-section{flex-direction:column;height:auto}.pub-hero-left{flex:0 0 260px;width:100%}.pub-hero-left-fade{background:linear-gradient(to bottom,transparent 50%,#0d0d0d 100%)}.pub-hero-right{padding:20px}}
 .pub-row-wrap{padding:32px 32px 0}
 .pub-row-head{font-size:11px;font-weight:700;letter-spacing:3px;color:#555;display:flex;align-items:center;gap:14px;margin-bottom:18px}
 .pub-row-head::after{content:'';flex:1;height:1px;background:#1e1e1e}
@@ -265,17 +265,44 @@ select.form-input option{background:#222}
 .pub-pcard-date{font-size:11px;color:#555}
 .pub-empty{text-align:center;padding:60px 32px;color:#333}
 /* Cinema event detail page */
-.pub-detail-hero{position:relative;overflow:hidden;min-height:320px}
-.pub-detail-bg{position:absolute;inset:0;background-size:cover;background-position:center top;filter:blur(10px) brightness(.2);transform:scale(1.1)}
-.pub-detail-grad{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,#0d0d0d 100%)}
-.pub-detail-body{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:48px 24px 32px;display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
-.pub-detail-poster{width:160px;height:240px;border-radius:10px;object-fit:cover;flex-shrink:0;box-shadow:0 8px 32px #000c;border:1px solid #ffffff18}
-.pub-detail-poster-ph{width:160px;height:240px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:52px;border:1px solid #333}
-.pub-detail-info{flex:1;min-width:200px;padding-top:8px}
+.pub-detail-hero{display:flex;background:#0d0d0d;overflow:hidden;min-height:380px}
+.pub-detail-left{flex:0 0 280px;flex-shrink:0;position:relative;overflow:hidden}
+.pub-detail-left-img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.pub-detail-left-fade{position:absolute;inset:0;background:linear-gradient(to right,transparent 50%,#0d0d0d 100%)}
+.pub-detail-left-ph{width:100%;height:100%;min-height:380px;display:flex;align-items:center;justify-content:center;font-size:72px;background:#111}
+.pub-detail-right{flex:1;padding:40px 32px 40px 0;display:flex;flex-direction:column;justify-content:center}
+@media(max-width:640px){.pub-detail-hero{flex-direction:column}.pub-detail-left{flex:0 0 220px;width:100%}.pub-detail-left-fade{background:linear-gradient(to bottom,transparent 50%,#0d0d0d 100%)}.pub-detail-right{padding:20px}}
 .pub-trailer-wrap{max-width:860px;margin:0 auto;padding:0 24px 28px}
 .pub-trailer-inner{position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;background:#000}
 .pub-trailer-inner iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 .pub-detail-content{max-width:860px;margin:0 auto;padding:0 24px 40px}
+
+/* ── FOOTER ── */
+.pub-footer{background:#080808;border-top:1px solid #1a1a1a;padding:40px 32px;margin-top:40px}
+.pub-footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:28px}
+.pub-footer-brand{font-family:Impact,sans-serif;font-size:20px;color:#e94560;letter-spacing:3px;margin-bottom:8px}
+.pub-footer-powered{font-size:12px;color:#333;margin-top:6px}
+.pub-footer-contact a{color:#888;text-decoration:none}.pub-footer-contact a:hover{color:#aaa}
+/* ── CONSUMER AUTH ── */
+.consumer-auth-wrap{max-width:480px;margin:60px auto;padding:0 24px}
+.consumer-auth-box{background:#141414;border:1px solid #252525;border-radius:16px;padding:36px}
+.consumer-auth-logo{font-family:Impact,sans-serif;font-size:22px;color:#e94560;letter-spacing:4px;text-align:center;margin-bottom:4px}
+.consumer-auth-sub{text-align:center;font-size:14px;color:#555;margin-bottom:28px}
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:20px 0}
+.tier-card{background:#141414;border:1px solid #1e1e1e;border-radius:12px;padding:20px;position:relative;transition:border-color .2s}
+.tier-card.active{border-color:var(--accent)}
+.tier-card-crown{font-size:28px;margin-bottom:10px}
+.tier-card-name{font-size:16px;font-weight:900;margin-bottom:4px}
+.tier-card-price{font-size:13px;color:#555;margin-bottom:12px}
+.tier-card-perks{list-style:none;padding:0;margin:0;font-size:12px;color:#888;display:flex;flex-direction:column;gap:5px}
+.tier-card-perks li::before{content:'✓ ';color:#22c55e}
+/* ── LAYOUT TEMPLATES ── */
+.tmpl-card{background:#141414;border:1px solid #1e1e1e;border-radius:10px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.tmpl-card-name{font-size:14px;font-weight:700}
+.tmpl-card-meta{font-size:12px;color:#555;margin-top:2px}
+/* ── GET IN TOUCH MODAL ── */
+.git-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+.git-box{background:#141414;border:1px solid #252525;border-radius:16px;padding:32px;max-width:480px;width:100%}
 
 </style>
 
@@ -352,7 +379,33 @@ var AUTH = {
     if(!AUTH.currentProfile) return false;
     if(AUTH.currentProfile.role === 'admin') return true;
     return AUTH.currentProfile.id === evOrgId;
-  }
+  },
+
+  consumerSignup: async function(name, email, password){
+    var { data, error } = await _supa.auth.signUp({ email, password });
+    if(error) return { error: error.message };
+    var uid = data.user && data.user.id;
+    if(!uid) return { error: 'Signup failed — no user ID returned.' };
+    var { error: pe } = await _supa.from('consumer_profiles').insert({ id: uid, name: name, email: email, tier: 'standard' });
+    if(pe) return { error: pe.message };
+    var { data: prof } = await _supa.from('consumer_profiles').select('*').eq('id', uid).single();
+    AUTH.consumerProfile = prof || { id: uid, name, email, tier: 'standard' };
+    return { profile: AUTH.consumerProfile };
+  },
+  consumerLogin: async function(email, password){
+    var { data, error } = await _supa.auth.signInWithPassword({ email, password });
+    if(error) return { error: error.message };
+    var uid = data.user && data.user.id;
+    var { data: prof } = await _supa.from('consumer_profiles').select('*').eq('id', uid).single();
+    if(!prof) return { error: 'No member account found. Try signing up.' };
+    AUTH.consumerProfile = prof;
+    return { profile: prof };
+  },
+  consumerSignOut: async function(){
+    AUTH.consumerProfile = null;
+    await _supa.auth.signOut();
+  },
+  consumerProfile: null
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -695,6 +748,21 @@ var DB = {
       trailer_url:         ev.trailerUrl||null,
       design:             ev.design || {}
     };
+  },
+
+  getLayoutTemplates: async function(){
+    var { data, error } = await _supa.from('layout_templates').select('*').order('name');
+    if(error) throw new Error(error.message);
+    return data || [];
+  },
+  saveLayoutTemplate: async function(t){
+    var { data, error } = await _supa.from('layout_templates').upsert(t).select().single();
+    if(error) throw new Error(error.message);
+    return data;
+  },
+  deleteLayoutTemplate: async function(id){
+    var { error } = await _supa.from('layout_templates').delete().eq('id', id);
+    if(error) throw new Error(error.message);
   }
 };
 
@@ -989,13 +1057,47 @@ var SEATING=(function(){
     var html='<div class="layout-form-panel">';
     html+='<h4 style="margin:0 0 16px;color:var(--accent);font-size:13px;letter-spacing:2px">'+(isEdit?'EDIT LAYOUT':'NEW LAYOUT')+'</h4>';
     html+='<label class="form-label">Layout Name<input type="text" id="layout-name" class="form-input" value="'+(layout?layout.name:'')+'" placeholder="e.g. Main Hall"></label>';
+    if(!isEdit){
+      html+='<div style="margin-top:14px;padding:14px;background:#0d0d0d;border:1px solid #1e1e1e;border-radius:8px">';
+      html+='<div style="font-size:11px;color:#555;letter-spacing:2px;margin-bottom:8px">LOAD FROM TEMPLATE</div>';
+      html+='<div style="display:flex;gap:8px"><select class="form-input" id="tmpl-select" style="flex:1"><option value="">— Select a venue template —</option></select>';
+      html+='<button class="btn-ghost btn-sm" id="btn-tmpl-load">Load</button></div>';
+      html+='</div>';
+    }
     html+='<div style="margin:20px 0 10px;display:flex;justify-content:space-between;align-items:center">';
     html+='<span style="font-size:11px;color:var(--accent);letter-spacing:2px;font-weight:700">SECTIONS</span>';
-    html+='<button class="btn-ghost btn-sm" id="btn-add-section">+ Add Section</button></div>';
+    html+='<div style="display:flex;gap:6px"><button class="btn-ghost btn-sm btn-purple" id="btn-save-tmpl" title="Save current sections as a venue template">&#x2606; Save as Template</button>';
+    html+='<button class="btn-ghost btn-sm" id="btn-add-section">+ Add Section</button></div></div>';
     html+='<div id="sections-list"></div>';
     html+='<div class="form-actions"><button class="btn-ghost" id="btn-cancel-layout">Cancel</button><button class="btn-primary" id="btn-save-layout">Save Layout</button></div>';
     html+='</div>';
     area.innerHTML=html;
+
+    // Load templates into dropdown
+    if(!isEdit){
+      DB.getLayoutTemplates().then(function(tmpls){
+        var sel=area.querySelector('#tmpl-select'); if(!sel) return;
+        tmpls.forEach(function(t){ var o=document.createElement('option'); o.value=t.id; o.textContent=t.name+' ('+((t.sections||[]).length)+' sections)'; o.dataset.secs=JSON.stringify(t.sections||[]); sel.appendChild(o); });
+      }).catch(function(){});
+      area.querySelector('#btn-tmpl-load').onclick=function(){
+        var sel=area.querySelector('#tmpl-select');
+        var opt=sel&&sel.options[sel.selectedIndex];
+        if(!opt||!opt.value){ toast('Select a template first',3000); return; }
+        try{ formSecs=JSON.parse(opt.dataset.secs||'[]'); renderSecs(); toast('Template loaded ✓'); }catch(e){}
+      };
+    }
+
+    // Save as template (admin only)
+    area.querySelector('#btn-save-tmpl').onclick=async function(){
+      if(!formSecs.length){ toast('Add sections first',3000); return; }
+      var name=prompt('Template name (e.g. "Grand Hall - 500 seats"):');
+      if(!name) return;
+      var sess=AUTH.session();
+      try{
+        await DB.saveLayoutTemplate({id:genUID(),name:name,sections:formSecs,created_by:sess?sess.userId:null});
+        toast('Template saved ✓');
+      }catch(e){ toast('Error: '+e.message,4000); }
+    };
 
     function renderSecs(){
       var list=area.querySelector('#sections-list');
@@ -1525,8 +1627,39 @@ async function updatePreview(container,design){
 // ═══════════════════════════════════════════════════════════════════════════════
 function renderSeating(container){
   if(STATE.activeEvent) refreshCache(STATE.activeEvent.id);
-  container.innerHTML='<div id="seating-container"></div>';
+  var sess=AUTH.session();
+  var tmplPanel=sess&&sess.role==='admin'?'<div id="templates-panel"></div>':'';
+  container.innerHTML='<div id="seating-container"></div>'+tmplPanel;
   SEATING.renderManager(getEl('seating-container'),STATE.activeEvent.id,function(){});
+  if(sess&&sess.role==='admin') renderLayoutTemplatesPanel(document.getElementById('templates-panel'));
+}
+
+async function renderLayoutTemplatesPanel(container){
+  if(!container) return;
+  container.innerHTML='<div class="panel" style="margin-top:24px"><div class="panel-title">&#x1F4CD; VENUE TEMPLATES</div><div id="tmpl-list">Loading…</div><div style="margin-top:12px"><button class="btn-ghost btn-sm" id="btn-new-tmpl">+ New Template</button></div><div id="tmpl-form-area"></div></div>';
+  async function reloadTmpls(){
+    var tl=document.getElementById('tmpl-list'); if(!tl) return;
+    tl.innerHTML='Loading…';
+    try{
+      var tmpls=await DB.getLayoutTemplates();
+      if(!tmpls.length){ tl.innerHTML='<p style="color:#444;font-size:13px">No templates yet.</p>'; return; }
+      tl.innerHTML=tmpls.map(function(t){
+        return '<div class="tmpl-card"><div><div class="tmpl-card-name">'+t.name+'</div><div class="tmpl-card-meta">'+((t.sections||[]).length)+' section'+(t.sections.length!==1?'s':'')+'</div></div><button class="btn-ghost btn-xs btn-red" data-del-tmpl="'+t.id+'">&#x2715; Delete</button></div>';
+      }).join('');
+      tl.querySelectorAll('[data-del-tmpl]').forEach(function(b){
+        b.onclick=async function(){ if(!confirm('Delete this template?')) return; await DB.deleteLayoutTemplate(b.dataset.delTmpl); reloadTmpls(); };
+      });
+    }catch(e){ tl.innerHTML='<span style="color:#e94560">'+e.message+'</span>'; }
+  }
+  reloadTmpls();
+  document.getElementById('btn-new-tmpl').onclick=function(){
+    var fa=document.getElementById('tmpl-form-area'); if(!fa) return;
+    fa.innerHTML='<div class="panel" style="margin-top:12px"><div class="panel-title">NEW TEMPLATE</div>'+
+      '<label class="form-label">Template Name<input type="text" class="form-input" id="new-tmpl-name" placeholder="e.g. Grand Hall"></label>'+
+      '<p style="font-size:12px;color:#555;margin:10px 0 0">Build this template by creating a layout in any event, then use "Save as Template" inside the layout form.</p>'+
+      '<div class="form-actions"><button class="btn-ghost" id="new-tmpl-cancel">Cancel</button></div></div>';
+    fa.querySelector('#new-tmpl-cancel').onclick=function(){ fa.innerHTML=''; };
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -2664,7 +2797,6 @@ async function renderPublicEvent(eventId){
     var main=getEl('main');
     main.className='pub-mode';
     var trailerEmbed=getYTEmbedUrl(ev.trailerUrl||null);
-    var bgStyle=ev.poster?'background-image:url('+ev.poster+')':'background:linear-gradient(135deg,'+ac+'22,#0d0d0d)';
     var html='';
     // ── Cinema nav ───────────────────────────────────────────────────────────────
     html+='<div class="pub-cinema-nav">';
@@ -2674,22 +2806,25 @@ async function renderPublicEvent(eventId){
     html+='<button onclick="renderPublicScanner(\''+ev.id+'\')" style="background:transparent;border:1px solid #333;border-radius:6px;color:#aaa;font-size:12px;padding:5px 12px;cursor:pointer;font-family:var(--font)">&#x1F4F7; Scanner</button>';
     html+='<button onclick="renderLogin()" style="background:transparent;border:1px solid #333;border-radius:6px;color:#aaa;font-size:12px;padding:5px 12px;cursor:pointer;font-family:var(--font)">&#x1F511; Login</button>';
     html+='</div>';
-    // ── Hero banner ──────────────────────────────────────────────────────────────
+    // ── Hero banner (no blur — side-by-side poster + info) ───────────────────────
     html+='<div class="pub-detail-hero">';
-    html+='<div class="pub-detail-bg" style="'+bgStyle+'"></div>';
-    html+='<div class="pub-detail-grad"></div>';
-    html+='<div class="pub-detail-body">';
-    if(ev.poster){ html+='<img class="pub-detail-poster" src="'+ev.poster+'" alt="'+ev.name+'">'; }
-    else { html+='<div class="pub-detail-poster-ph" style="background:linear-gradient(135deg,'+ac+'22,#111)">🎫</div>'; }
-    html+='<div class="pub-detail-info">';
-    if(ev.category) html+='<span style="font-size:10px;font-weight:700;letter-spacing:2px;padding:3px 10px;border-radius:20px;background:'+ac+'22;color:'+ac+';border:1px solid '+ac+'44;display:inline-block;margin-bottom:10px">'+ev.category.toUpperCase()+'</span>';
-    html+='<div style="font-size:36px;font-weight:900;line-height:1.1;margin-bottom:10px;text-shadow:0 2px 16px #000">'+ev.name+'</div>';
-    html+='<div style="font-size:13px;color:#aaa;display:flex;flex-wrap:wrap;gap:14px;margin-bottom:16px">';
+    html+='<div class="pub-detail-left">';
+    if(ev.poster){
+      html+='<img class="pub-detail-left-img" src="'+ev.poster+'" alt="'+ev.name+'">';
+      html+='<div class="pub-detail-left-fade"></div>';
+    } else {
+      html+='<div class="pub-detail-left-ph">🎫</div>';
+    }
+    html+='</div>';
+    html+='<div class="pub-detail-right">';
+    if(ev.category) html+='<span style="font-size:10px;font-weight:700;letter-spacing:2px;padding:3px 10px;border-radius:20px;background:'+ac+'22;color:'+ac+';border:1px solid '+ac+'44;display:inline-block;margin-bottom:12px">'+ev.category.toUpperCase()+'</span>';
+    html+='<div style="font-size:34px;font-weight:900;line-height:1.1;margin-bottom:10px">'+ev.name+'</div>';
+    html+='<div style="font-size:13px;color:#aaa;display:flex;flex-wrap:wrap;gap:14px;margin-bottom:14px">';
     html+='<span>&#x1F4C5; '+(ev.date?new Date(ev.date).toLocaleString():'TBC')+'</span>';
     if(ev.venue) html+='<span>&#x1F4CD; '+ev.venue+'</span>';
     html+='</div>';
     if(allSeats.length>0){ html+='<div style="display:flex;gap:14px;font-size:13px;margin-bottom:16px"><span style="color:var(--green)">&#x25CF; '+available+' available</span><span style="color:var(--accent)">&#x25CF; '+sold+' sold</span><span style="color:var(--purple)">&#x25CF; '+held+' held</span></div>'; }
-    html+='</div></div></div>';
+    html+='</div></div>';
     // ── Trailer ──────────────────────────────────────────────────────────────────
     if(trailerEmbed){
       html+='<div class="pub-trailer-wrap"><div class="pub-trailer-inner"><iframe src="'+trailerEmbed+'" allowfullscreen loading="lazy"></iframe></div></div>';
@@ -2747,6 +2882,7 @@ async function renderPublicEvent(eventId){
       html+='</div>';
     }
     html+='</div>'; // pub-detail-content
+    html+=pubFooterHtml();
     return html;
   }
 
@@ -3638,6 +3774,126 @@ function getYTEmbedUrl(url){
   return m?'https://www.youtube.com/embed/'+m[1]+'?rel=0&modestbranding=1':null;
 }
 
+function showGetInTouchModal(){
+  var overlay=document.createElement('div');
+  overlay.className='git-overlay';
+  overlay.innerHTML='<div class="git-box">'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">'+
+    '<div style="font-size:16px;font-weight:900">Get in Touch</div>'+
+    '<button id="git-close" class="btn-ghost btn-xs">&#x2715;</button></div>'+
+    '<p style="font-size:13px;color:#888;line-height:1.7;margin-bottom:20px">Interested in hosting your event on TICKR? Our team is ready to help you get started.</p>'+
+    '<div style="background:#1a1a1a;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px;font-size:13px">'+
+    '<div>&#x2709;&nbsp;<a href="mailto:sales@adventure.mv" style="color:#e94560;text-decoration:none">sales@adventure.mv</a></div>'+
+    '<div>&#x1F4DE;&nbsp;<a href="tel:+9607764227" style="color:#aaa;text-decoration:none">+960 776 4227</a></div>'+
+    '</div>'+
+    '<p style="font-size:12px;color:#444;margin-top:16px;text-align:center">Powered by <strong style="color:#555">Adventure Up</strong></p>'+
+    '</div>';
+  document.body.appendChild(overlay);
+  overlay.querySelector('#git-close').onclick=function(){ document.body.removeChild(overlay); };
+  overlay.onclick=function(e){ if(e.target===overlay) document.body.removeChild(overlay); };
+}
+
+function showTiersPage(){
+  var main=getEl('main');
+  main.className='pub-mode';
+  var tiers=[
+    {id:'standard',icon:'🎫',name:'Standard',price:'Free',color:'#888',perks:['Basic event booking','Reservation history','Digital tickets']},
+    {id:'silver',icon:'🥈',name:'Silver',price:'MVR 49 / month',color:'#94a3b8',perks:['Everything in Standard','Early access 24h before public','No booking fee']},
+    {id:'gold',icon:'🥇',name:'Gold',price:'MVR 99 / month',color:'#f59e0b',perks:['Everything in Silver','Early access 48h before public','5% discount on all tickets','Priority support']},
+    {id:'platinum',icon:'💎',name:'Platinum',price:'MVR 199 / month',color:'#a78bfa',perks:['Everything in Gold','Exclusive VIP events','10% discount on all tickets','Dedicated concierge','First access to limited events']}
+  ];
+  var cp=AUTH.consumerProfile;
+  var html='<div class="pub-cinema-nav">';
+  html+='<span class="pub-cinema-logo" onclick="renderPublicHome()" style="cursor:pointer">&#x25C6; TICKR</span>';
+  html+='<span style="flex:1"></span>';
+  html+='<button onclick="renderPublicHome()" style="background:transparent;border:1px solid #333;border-radius:6px;color:#aaa;font-size:12px;padding:5px 12px;cursor:pointer;font-family:var(--font)">&#x2190; Back</button>';
+  html+='</div>';
+  html+='<div style="max-width:860px;margin:0 auto;padding:40px 24px">';
+  html+='<div style="text-align:center;margin-bottom:36px">';
+  html+='<div style="font-size:28px;font-weight:900;margin-bottom:8px">Member Benefits</div>';
+  html+='<div style="font-size:14px;color:#555">Sign up as a member to unlock exclusive perks and discounts</div>';
+  if(cp) html+='<div style="margin-top:12px;font-size:13px;color:#888">Logged in as <strong style="color:#aaa">'+cp.name+'</strong> &middot; <span style="color:'+(cp.tier==='platinum'?'#a78bfa':cp.tier==='gold'?'#f59e0b':cp.tier==='silver'?'#94a3b8':'#888')+'">'+cp.tier.toUpperCase()+'</span></div>';
+  html+='</div>';
+  html+='<div class="tier-grid">';
+  tiers.forEach(function(t){
+    var isActive=cp&&cp.tier===t.id;
+    html+='<div class="tier-card'+(isActive?' active':'')+'" style="'+(isActive?'border-color:'+t.color+';':'')+'">';
+    html+='<div class="tier-card-crown">'+t.icon+'</div>';
+    html+='<div class="tier-card-name" style="color:'+t.color+'">'+t.name+'</div>';
+    html+='<div class="tier-card-price">'+t.price+'</div>';
+    html+='<ul class="tier-card-perks">';
+    t.perks.forEach(function(p){ html+='<li>'+p+'</li>'; });
+    html+='</ul>';
+    if(isActive) html+='<div style="margin-top:14px;font-size:11px;font-weight:700;color:'+t.color+';letter-spacing:1px">YOUR CURRENT TIER</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  if(!cp){
+    html+='<div style="text-align:center;margin-top:32px">';
+    html+='<button class="btn-primary" id="tiers-signup-btn" style="margin-right:10px">&#x1F464; Create Free Account</button>';
+    html+='<button class="btn-ghost" id="tiers-login-btn">Already a member? Sign in</button>';
+    html+='</div>';
+  } else {
+    html+='<div style="text-align:center;margin-top:32px">';
+    html+='<p style="font-size:13px;color:#555;margin-bottom:12px">To upgrade your tier, contact us at <a href="mailto:sales@adventure.mv" style="color:#e94560">sales@adventure.mv</a></p>';
+    html+='<button class="btn-ghost btn-sm" id="tiers-signout-btn">Sign Out</button>';
+    html+='</div>';
+  }
+  html+='</div>';
+  html+=pubFooterHtml();
+  main.innerHTML=html;
+  var s=main.querySelector('#tiers-signup-btn'); if(s) s.onclick=function(){ renderConsumerAuth('signup'); };
+  var l=main.querySelector('#tiers-login-btn'); if(l) l.onclick=function(){ renderConsumerAuth('login'); };
+  var so=main.querySelector('#tiers-signout-btn'); if(so) so.onclick=async function(){ await AUTH.consumerSignOut(); renderPublicHome(); };
+}
+
+function renderConsumerAuth(mode){
+  var main=getEl('main');
+  main.className='pub-mode';
+  var isSignup=mode==='signup';
+  var html='<div class="pub-cinema-nav">';
+  html+='<span class="pub-cinema-logo" onclick="renderPublicHome()" style="cursor:pointer">&#x25C6; TICKR</span>';
+  html+='<span style="flex:1"></span>';
+  html+='<button onclick="renderPublicHome()" style="background:transparent;border:1px solid #333;border-radius:6px;color:#aaa;font-size:12px;padding:5px 12px;cursor:pointer;font-family:var(--font)">&#x2190; Back</button>';
+  html+='</div>';
+  html+='<div class="consumer-auth-wrap">';
+  html+='<div class="consumer-auth-box">';
+  html+='<div class="consumer-auth-logo">&#x25C6; TICKR</div>';
+  html+='<div class="consumer-auth-sub">'+(isSignup?'Create your member account':'Sign in to your member account')+'</div>';
+  html+='<div id="ca-err" style="display:none;background:#e9456022;border:1px solid #e9456044;border-radius:8px;padding:10px 14px;font-size:13px;color:#e94560;margin-bottom:16px"></div>';
+  if(isSignup) html+='<label class="form-label" style="margin-bottom:12px">Full Name<input type="text" class="form-input" id="ca-name" placeholder="Your name"></label>';
+  html+='<label class="form-label" style="margin-bottom:12px">Email<input type="email" class="form-input" id="ca-email" placeholder="your@email.com" autocomplete="email"></label>';
+  html+='<label class="form-label" style="margin-bottom:20px">Password<input type="password" class="form-input" id="ca-pass" placeholder="••••••••" autocomplete="'+(isSignup?'new-password':'current-password')+'"></label>';
+  html+='<button class="btn-primary" id="ca-go" style="width:100%;padding:12px">'+(isSignup?'Create Account':'Sign In')+'</button>';
+  html+='<div style="text-align:center;margin-top:16px;font-size:13px;color:#555">';
+  if(isSignup) html+='Already have an account? <button onclick="renderConsumerAuth(\'login\')" style="background:none;border:none;color:#e94560;cursor:pointer;font-family:var(--font);font-size:13px">Sign in</button>';
+  else html+='New here? <button onclick="renderConsumerAuth(\'signup\')" style="background:none;border:none;color:#e94560;cursor:pointer;font-family:var(--font);font-size:13px">Create a free account</button>';
+  html+='</div>';
+  html+='<div style="text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid #1e1e1e;font-size:12px;color:#333">';
+  html+='Want to host events? <button onclick="renderLogin()" style="background:none;border:none;color:#888;cursor:pointer;font-family:var(--font);font-size:12px">Organiser login &#x2192;</button>';
+  html+='</div></div></div>';
+  html+=pubFooterHtml();
+  main.innerHTML=html;
+  var btn=main.querySelector('#ca-go');
+  btn.onclick=async function(){
+    var email=(main.querySelector('#ca-email')||{}).value||'';
+    var pass=(main.querySelector('#ca-pass')||{}).value||'';
+    var errEl=main.querySelector('#ca-err');
+    btn.disabled=true; btn.textContent=isSignup?'Creating…':'Signing in…';
+    var result;
+    if(isSignup){
+      var name=(main.querySelector('#ca-name')||{}).value||'';
+      if(!name||!email||!pass){ errEl.style.display=''; errEl.textContent='Please fill in all fields.'; btn.disabled=false; btn.textContent='Create Account'; return; }
+      result=await AUTH.consumerSignup(name,email,pass);
+    } else {
+      result=await AUTH.consumerLogin(email,pass);
+    }
+    if(result.error){ errEl.style.display=''; errEl.textContent=result.error; btn.disabled=false; btn.textContent=isSignup?'Create Account':'Sign In'; return; }
+    showTiersPage();
+  };
+  var passEl=main.querySelector('#ca-pass'); if(passEl) passEl.onkeydown=function(e){ if(e.key==='Enter') btn.click(); };
+}
+
 function renderPublicHome(){
   var now=new Date();
   var nav=getEl('nav');
@@ -3702,6 +3958,8 @@ function _renderPublicHomeWithEvents(allEvents, now){
   html+='<div class="pub-cinema-nav">';
   html+='<span class="pub-cinema-logo" id="pub-logo-home">&#x25C6; TICKR</span>';
   html+='<span style="flex:1"></span>';
+  html+='<button class="btn-ghost btn-sm" id="pub-home-touch-btn" style="color:#e94560;border-color:#e9456033">&#x2709; Get in Touch</button>';
+  html+='<button class="btn-ghost btn-sm" id="pub-home-member-btn">&#x1F464; Member Portal</button>';
   html+='<button class="btn-ghost btn-sm" id="pub-home-scanner-btn">&#x1F4F7; Scanner</button>';
   html+='<button class="btn-primary btn-sm" id="pub-home-login-btn">&#x1F511; Organiser Login</button>';
   html+='</div>';
@@ -3716,24 +3974,24 @@ function _renderPublicHomeWithEvents(allEvents, now){
   // ── Hero (first upcoming event) ──────────────────────────────────────────────
   var featured=upcoming[0]||past[0];
   if(featured){
-    var fd=featured.design||{}, fac=featured.design&&featured.design.accentColor||'#e94560';
-    var bgStyle=featured.poster?'background-image:url('+featured.poster+')':'background:linear-gradient(135deg,'+fac+'22,#0d0d0d)';
+    var fac=featured.design&&featured.design.accentColor||'#e94560';
     html+='<div class="pub-hero-section">';
-    html+='<div class="pub-hero-bg" style="'+bgStyle+'"></div>';
-    html+='<div class="pub-hero-vgrad"></div>';
-    html+='<div class="pub-hero-body">';
+    html+='<div class="pub-hero-left">';
     if(featured.poster){
-      html+='<img class="pub-hero-poster" src="'+featured.poster+'" alt="'+featured.name+'">';
+      html+='<img class="pub-hero-left-img" src="'+featured.poster+'" alt="'+featured.name+'">';
+      html+='<div class="pub-hero-left-fade"></div>';
     } else {
-      html+='<div class="pub-hero-poster-ph" style="background:linear-gradient(135deg,'+fac+'22,#111)">🎫</div>';
+      html+='<div class="pub-hero-left-ph">🎫</div>';
     }
-    html+='<div class="pub-hero-text">';
+    html+='</div>';
+    html+='<div class="pub-hero-right">';
     if(featured.category) html+='<span class="pub-hero-cat" style="background:'+fac+'22;color:'+fac+';border:1px solid '+fac+'44">'+featured.category.toUpperCase()+'</span>';
     html+='<div class="pub-hero-title">'+featured.name+'</div>';
     html+='<div class="pub-hero-meta">';
-    if(featured.date) html+='<span>&#x1F4C5; '+fmtDate(featured.date)+' &nbsp;'+fmtTime(featured.date)+'</span>';
+    if(featured.date) html+='<span>&#x1F4C5; '+fmtDate(featured.date)+'&nbsp;&nbsp;'+fmtTime(featured.date)+'</span>';
     if(featured.venue) html+='<span>&#x1F4CD; '+featured.venue+'</span>';
     html+='</div>';
+    if(featured.description) html+='<p style="font-size:13px;color:#666;line-height:1.6;margin-bottom:20px;max-width:480px">'+featured.description.slice(0,160)+(featured.description.length>160?'…':'')+'</p>';
     var isPastFeatured=featured.date&&new Date(featured.date)<now;
     if(!isPastFeatured){
       var allSeatsFeat=(_cache.seats||[]).filter(function(s){ return s.event_id===featured.id; });
@@ -3741,10 +3999,10 @@ function _renderPublicHomeWithEvents(allEvents, now){
       if(soldOutFeat){
         html+='<button class="btn-ghost" style="color:var(--amber);border-color:#f59e0b44" data-pub-waitlist="'+featured.id+'">&#x23F3; Join Waitlist</button>';
       } else {
-        html+='<button class="btn-primary" data-pub-open="'+featured.id+'" style="background:'+fac+';border:none">&#x1F3AB; Book Now</button>';
+        html+='<button class="btn-primary" data-pub-open="'+featured.id+'" style="background:'+fac+';border:none;margin-right:10px">&#x1F3AB; Book Now</button>';
       }
     }
-    html+='</div></div></div></div>';
+    html+='</div></div>';
   }
 
   // ── NOW SHOWING / UPCOMING row ───────────────────────────────────────────────
@@ -3765,9 +4023,26 @@ function _renderPublicHomeWithEvents(allEvents, now){
     html+='</div></div>';
   }
 
-  html+='<div style="height:60px"></div>';
+  html+=pubFooterHtml();
   main.innerHTML=html;
   wirePubHome(main);
+}
+
+function pubFooterHtml(){
+  return '<div class="pub-footer"><div class="pub-footer-inner">'+
+    '<div>'+
+    '<div class="pub-footer-brand">&#x25C6; TICKR</div>'+
+    '<div style="font-size:12px;color:#444;margin-bottom:8px">Your event ticketing platform</div>'+
+    '<div class="pub-footer-powered">Powered by <strong style="color:#888">Adventure Up</strong></div>'+
+    '</div>'+
+    '<div class="pub-footer-contact" style="font-size:13px;color:#555;line-height:2">'+
+    '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#333;margin-bottom:8px">CONTACT US</div>'+
+    '<div>&#x2709;&nbsp;<a href="mailto:sales@adventure.mv">sales@adventure.mv</a></div>'+
+    '<div>&#x1F4DE;&nbsp;<a href="tel:+9607764227">776 4227</a></div>'+
+    '</div>'+
+    '<div style="font-size:12px;color:#2a2a2a;text-align:right;align-self:flex-end">'+
+    '&copy; '+new Date().getFullYear()+' Adventure Up. All rights reserved.</div>'+
+    '</div></div>';
 }
 
 function wirePubHome(main){
@@ -3776,6 +4051,8 @@ function wirePubHome(main){
     var t;
     t=e.target.closest('#pub-home-login-btn'); if(t){ e.preventDefault(); renderLogin(); return; }
     t=e.target.closest('#pub-home-scanner-btn'); if(t){ e.preventDefault(); renderPublicScanner(null); return; }
+    t=e.target.closest('#pub-home-touch-btn'); if(t){ e.preventDefault(); showGetInTouchModal(); return; }
+    t=e.target.closest('#pub-home-member-btn'); if(t){ e.preventDefault(); renderConsumerAuth('login'); return; }
     t=e.target.closest('#pub-logo-home'); if(t){ e.preventDefault(); renderPublicHome(); return; }
     t=e.target.closest('[data-pub-open]');
     if(t){ e.preventDefault(); e.stopPropagation(); renderPublicEvent(t.getAttribute('data-pub-open')).catch(function(err){ console.error(err); }); return; }
