@@ -236,6 +236,47 @@ select.form-input option{background:#222}
 .approval-card-header{padding:16px;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
 .approval-card-actions{padding:10px 16px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 
+/* ── CINEMA PUBLIC PAGES ── */
+#main.pub-mode{padding:0;max-width:100%}
+.pub-cinema-nav{height:60px;background:#000000ee;backdrop-filter:blur(14px);border-bottom:1px solid #1a1a1a;display:flex;align-items:center;padding:0 32px;gap:20px;position:sticky;top:0;z-index:200}
+.pub-cinema-logo{font-family:Impact,sans-serif;font-size:22px;color:#e94560;letter-spacing:4px;cursor:pointer;user-select:none}
+.pub-hero-section{position:relative;height:480px;overflow:hidden}
+.pub-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(8px) brightness(.3);transform:scale(1.08)}
+.pub-hero-vgrad{position:absolute;inset:0;background:linear-gradient(to top,#0d0d0d 0%,transparent 55%)}
+.pub-hero-body{position:relative;z-index:2;height:100%;display:flex;align-items:flex-end;padding:0 40px 44px;gap:28px;max-width:1140px;margin:0 auto}
+.pub-hero-poster{width:130px;height:195px;border-radius:10px;object-fit:cover;flex-shrink:0;box-shadow:0 8px 40px #000c;border:1px solid #ffffff18}
+.pub-hero-poster-ph{width:130px;height:195px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:42px;border:1px solid #333}
+.pub-hero-text{flex:1}
+.pub-hero-cat{font-size:10px;font-weight:700;letter-spacing:2px;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:10px}
+.pub-hero-title{font-size:40px;font-weight:900;line-height:1.05;margin-bottom:8px;text-shadow:0 2px 16px #000}
+.pub-hero-meta{font-size:13px;color:#aaa;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:16px}
+.pub-row-wrap{padding:32px 32px 0}
+.pub-row-head{font-size:11px;font-weight:700;letter-spacing:3px;color:#555;display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.pub-row-head::after{content:'';flex:1;height:1px;background:#1e1e1e}
+.pub-scroll{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.pub-scroll::-webkit-scrollbar{display:none}
+.pub-pcard{flex-shrink:0;width:164px;cursor:pointer}
+.pub-pcard-img{width:164px;height:246px;border-radius:10px;overflow:hidden;position:relative;background:#1a1a1a;border:1px solid #1e1e1e;transition:transform .2s,box-shadow .2s}
+.pub-pcard:hover .pub-pcard-img{transform:scale(1.04);box-shadow:0 12px 40px #000c}
+.pub-pcard-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px}
+.pub-pcard-badge{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.5px}
+.pub-pcard-label{padding:8px 2px 0}
+.pub-pcard-title{font-size:13px;font-weight:700;line-height:1.3;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-bottom:2px}
+.pub-pcard-date{font-size:11px;color:#555}
+.pub-empty{text-align:center;padding:60px 32px;color:#333}
+/* Cinema event detail page */
+.pub-detail-hero{position:relative;overflow:hidden;min-height:320px}
+.pub-detail-bg{position:absolute;inset:0;background-size:cover;background-position:center top;filter:blur(10px) brightness(.2);transform:scale(1.1)}
+.pub-detail-grad{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,#0d0d0d 100%)}
+.pub-detail-body{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:48px 24px 32px;display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
+.pub-detail-poster{width:160px;height:240px;border-radius:10px;object-fit:cover;flex-shrink:0;box-shadow:0 8px 32px #000c;border:1px solid #ffffff18}
+.pub-detail-poster-ph{width:160px;height:240px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:52px;border:1px solid #333}
+.pub-detail-info{flex:1;min-width:200px;padding-top:8px}
+.pub-trailer-wrap{max-width:860px;margin:0 auto;padding:0 24px 28px}
+.pub-trailer-inner{position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;background:#000}
+.pub-trailer-inner iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.pub-detail-content{max-width:860px;margin:0 auto;padding:0 24px 40px}
+
 </style>
 
 </head>
@@ -620,6 +661,8 @@ var DB = {
       rejected_at:          e.rejected_at,
       rejection_reason:     e.rejection_reason,
       booking_message:      e.booking_message||'',
+      poster:               e.poster||null,
+      trailerUrl:           e.trailer_url||null,
       payment_override:     e.payment_override||null,
       design:               e.design || {},
       created_at:           e.created_at
@@ -648,6 +691,8 @@ var DB = {
       rejection_reason:   ev.rejection_reason,
       booking_message:    ev.booking_message||null,
       payment_override:   ev.payment_override||null,
+      poster:              ev.poster||null,
+      trailer_url:         ev.trailerUrl||null,
       design:             ev.design || {}
     };
   }
@@ -1156,6 +1201,7 @@ function renderMain(){
 // LOGIN
 // ═══════════════════════════════════════════════════════════════════════════════
 function renderLogin(){
+  getEl('main').className='';
   var nav=getEl('nav');
   nav.style.display='';
   nav.innerHTML='<span class="nav-logo">&#x25C6; TICKR</span><span class="nav-spacer"></span><button class="btn-ghost btn-sm" id="login-back-btn">&#x2190; Back to Events</button>';
@@ -1314,7 +1360,11 @@ function showEventForm(event){
   html+='<label class="form-label">Date &amp; Time<input type="datetime-local" class="form-input" id="ef-date" value="'+(event&&event.date?event.date.slice(0,16):'')+'"></label>';
   html+='<label class="form-label">Venue<input type="text" class="form-input" id="ef-venue" value="'+(event?event.venue:'')+'" placeholder="Venue name"></label>';
   html+='</div>';
-  html+='<label class="form-label" style="margin-top:12px">Description<input type="text" class="form-input" id="ef-desc" value="'+(event?event.description:'')+'" placeholder="Optional"></label>';
+  html+='<label class="form-label" style="margin-top:12px">Description<textarea class="form-input" id="ef-desc" rows="3" placeholder="Optional" style="resize:vertical">'+(event?event.description||'':'')+'</textarea></label>';
+  html+='<label class="form-label" style="margin-top:12px">Poster Image <span style="opacity:.5;font-weight:400">(portrait, 2:3 ratio recommended)</span>';
+  if(event&&event.poster) html+='<img src="'+event.poster+'" style="height:80px;border-radius:6px;margin:4px 0;object-fit:cover;align-self:flex-start">';
+  html+='<input type="file" accept="image/*" class="form-input" id="ef-poster" style="padding:6px 0"></label>';
+  html+='<label class="form-label" style="margin-top:12px">Trailer URL (YouTube)<input type="text" class="form-input" id="ef-trailer" value="'+(event&&event.trailerUrl?event.trailerUrl:'')+'" placeholder="https://www.youtube.com/watch?v=..."></label>';
   html+='<div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--border)">';
   html+='<div class="panel-title">CAPACITY &amp; BOOKING</div>';
   html+='<div class="form-grid">';
@@ -1332,7 +1382,13 @@ function showEventForm(event){
   getEl('ef-save').onclick=async function(){
     var name=getEl('ef-name').value.trim(); if(!name){ alert('Event name required.'); return; }
     var btn=getEl('ef-save'); btn.textContent='Saving…'; btn.disabled=true;
-    var ev=await DB.saveEvent({id:event?event.id:genUID(),org_id:event?event.org_id:session.userId,name:name,category:getEl('ef-cat').value,date:getEl('ef-date').value,venue:getEl('ef-venue').value,description:getEl('ef-desc').value,seatingMode:getEl('ef-mode').value,capacity:parseInt(getEl('ef-capacity').value)||0,maxSeatsPerReservation:parseInt(getEl('ef-maxseats').value)||4,scanner_code:event&&event.scanner_code?event.scanner_code:genUID().slice(0,6),approval_status:event?event.approval_status:'draft',approval_fee:event?event.approval_fee||0:0,fee_paid:event?event.fee_paid||false:false,design:event?event.design:{}});
+    var posterData=event?event.poster||null:null;
+    var posterFile=(getEl('ef-poster')||{}).files&&getEl('ef-poster').files[0];
+    if(posterFile){
+      if(posterFile.size>5*1024*1024){ alert('Poster image too large — max 5 MB'); btn.textContent=isEdit?'Update Event':'Create Event'; btn.disabled=false; return; }
+      posterData=await compressImage(posterFile,600,900,0.85);
+    }
+    var ev=await DB.saveEvent({id:event?event.id:genUID(),org_id:event?event.org_id:session.userId,name:name,category:getEl('ef-cat').value,date:getEl('ef-date').value,venue:getEl('ef-venue').value,description:getEl('ef-desc').value,seatingMode:getEl('ef-mode').value,capacity:parseInt(getEl('ef-capacity').value)||0,maxSeatsPerReservation:parseInt(getEl('ef-maxseats').value)||4,scanner_code:event&&event.scanner_code?event.scanner_code:genUID().slice(0,6),approval_status:event?event.approval_status:'draft',approval_fee:event?event.approval_fee||0:0,fee_paid:event?event.fee_paid||false:false,design:event?event.design:{},poster:posterData,trailerUrl:getEl('ef-trailer').value.trim()||null});
     area.innerHTML='';
     var i=STATE.events.findIndex(function(e){ return e.id===ev.id; });
     if(i>=0) STATE.events[i]=ev; else STATE.events.unshift(ev);
@@ -2557,6 +2613,7 @@ function renderApprovals(container){
 async function renderPublicEvent(eventId){
   var _db=getEl('dev-banner'); if(_db) _db.style.display='none';
   var _nv=getEl('nav'); if(_nv) _nv.style.display='none';
+  var _mn=getEl('main'); if(_mn) _mn.className='pub-mode';
   var ev = null;
   try {
     // Try cache first
@@ -2604,24 +2661,42 @@ async function renderPublicEvent(eventId){
     var available=allSeats.filter(function(s){ return s.status==='available'; }).length;
     var sold=allSeats.filter(function(s){ return s.status==='sold'; }).length;
     var held=allSeats.filter(function(s){ return s.status==='held'; }).length;
-    var html='<div class="public-wrap">';
-    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">';
-    html+='<div style="font-family:Impact,sans-serif;font-size:20px;color:'+ac+';letter-spacing:3px">&#x25C6; TICKR</div>';
-    html+='<div style="display:flex;gap:8px">';
+    var main=getEl('main');
+    main.className='pub-mode';
+    var trailerEmbed=getYTEmbedUrl(ev.trailerUrl||null);
+    var bgStyle=ev.poster?'background-image:url('+ev.poster+')':'background:linear-gradient(135deg,'+ac+'22,#0d0d0d)';
+    var html='';
+    // ── Cinema nav ───────────────────────────────────────────────────────────────
+    html+='<div class="pub-cinema-nav">';
+    html+='<span class="pub-cinema-logo">&#x25C6; TICKR</span>';
+    html+='<span style="flex:1"></span>';
     html+='<button onclick="renderPublicHome()" style="background:transparent;border:1px solid #333;border-radius:6px;color:#aaa;font-size:12px;padding:5px 12px;cursor:pointer;font-family:var(--font)">&#x2190; All Events</button>';
     html+='<button onclick="renderPublicScanner(\''+ev.id+'\')" style="background:transparent;border:1px solid #333;border-radius:6px;color:#aaa;font-size:12px;padding:5px 12px;cursor:pointer;font-family:var(--font)">&#x1F4F7; Scanner</button>';
-    html+='<button onclick="renderLogin()" style="background:transparent;border:1px solid #333;border-radius:6px;color:#aaa;font-size:12px;padding:5px 12px;cursor:pointer;font-family:var(--font)">&#x1F511; Organiser Login</button>';
-    html+='</div></div>';
-    html+='<div class="public-hero" style="border-top:5px solid '+ac+'">';
-    html+='<div class="public-event-title">'+ev.name+'</div>';
-    html+='<div class="public-meta">';
+    html+='<button onclick="renderLogin()" style="background:transparent;border:1px solid #333;border-radius:6px;color:#aaa;font-size:12px;padding:5px 12px;cursor:pointer;font-family:var(--font)">&#x1F511; Login</button>';
+    html+='</div>';
+    // ── Hero banner ──────────────────────────────────────────────────────────────
+    html+='<div class="pub-detail-hero">';
+    html+='<div class="pub-detail-bg" style="'+bgStyle+'"></div>';
+    html+='<div class="pub-detail-grad"></div>';
+    html+='<div class="pub-detail-body">';
+    if(ev.poster){ html+='<img class="pub-detail-poster" src="'+ev.poster+'" alt="'+ev.name+'">'; }
+    else { html+='<div class="pub-detail-poster-ph" style="background:linear-gradient(135deg,'+ac+'22,#111)">🎫</div>'; }
+    html+='<div class="pub-detail-info">';
+    if(ev.category) html+='<span style="font-size:10px;font-weight:700;letter-spacing:2px;padding:3px 10px;border-radius:20px;background:'+ac+'22;color:'+ac+';border:1px solid '+ac+'44;display:inline-block;margin-bottom:10px">'+ev.category.toUpperCase()+'</span>';
+    html+='<div style="font-size:36px;font-weight:900;line-height:1.1;margin-bottom:10px;text-shadow:0 2px 16px #000">'+ev.name+'</div>';
+    html+='<div style="font-size:13px;color:#aaa;display:flex;flex-wrap:wrap;gap:14px;margin-bottom:16px">';
     html+='<span>&#x1F4C5; '+(ev.date?new Date(ev.date).toLocaleString():'TBC')+'</span>';
-    html+='<span>&#x1F4CD; '+(ev.venue||'TBC')+'</span>';
-    html+='<span>&#x1F3F7; '+(ev.category||'')+'</span>';
+    if(ev.venue) html+='<span>&#x1F4CD; '+ev.venue+'</span>';
     html+='</div>';
-    if(ev.description) html+='<p style="color:#888;font-size:14px">'+ev.description+'</p>';
-    if(allSeats.length>0){ html+='<div style="display:flex;gap:16px;margin-top:16px;font-size:13px"><span style="color:var(--green)">&#x25CF; '+available+' available</span><span style="color:var(--accent)">&#x25CF; '+sold+' sold</span><span style="color:var(--purple)">&#x25CF; '+held+' held</span></div>'; }
-    html+='</div>';
+    if(allSeats.length>0){ html+='<div style="display:flex;gap:14px;font-size:13px;margin-bottom:16px"><span style="color:var(--green)">&#x25CF; '+available+' available</span><span style="color:var(--accent)">&#x25CF; '+sold+' sold</span><span style="color:var(--purple)">&#x25CF; '+held+' held</span></div>'; }
+    html+='</div></div></div>';
+    // ── Trailer ──────────────────────────────────────────────────────────────────
+    if(trailerEmbed){
+      html+='<div class="pub-trailer-wrap"><div class="pub-trailer-inner"><iframe src="'+trailerEmbed+'" allowfullscreen loading="lazy"></iframe></div></div>';
+    }
+    // ── Description ──────────────────────────────────────────────────────────────
+    html+='<div class="pub-detail-content">';
+    if(ev.description) html+='<div style="font-size:15px;color:#aaa;line-height:1.7;margin-bottom:24px;white-space:pre-wrap">'+ev.description+'</div>';
     // Selection bar
     var n=selectedIds.size;
     html+='<div id="pub-sel-bar" style="background:#1a1a2e;border:1px solid #3b82f644;border-radius:10px;padding:12px 18px;margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">';
@@ -2671,7 +2746,7 @@ async function renderPublicEvent(eventId){
       html+='<button class="btn-primary" id="btn-pub-ga-reserve" style="margin-top:16px">Reserve a Ticket &#8594;</button>';
       html+='</div>';
     }
-    html+='</div>';
+    html+='</div>'; // pub-detail-content
     return html;
   }
 
@@ -3557,196 +3632,158 @@ async function renderWaitlistPanel(ev, container){
 // ═══════════════════════════════════════════════════════════════════════════════
 // PUBLIC HOME PAGE — default view, no login required
 // ═══════════════════════════════════════════════════════════════════════════════
+function getYTEmbedUrl(url){
+  if(!url) return null;
+  var m=url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+  return m?'https://www.youtube.com/embed/'+m[1]+'?rel=0&modestbranding=1':null;
+}
+
 function renderPublicHome(){
   var now=new Date();
   var nav=getEl('nav');
-  nav.style.display='flex';
-  nav.innerHTML=
-    '<span class="nav-logo">&#x25C6; TICKR</span>'+
-    '<span class="nav-spacer"></span>'+
-    '<button class="btn-ghost btn-sm" id="pub-scanner-nav-btn" style="margin-right:8px">&#x1F4F7; Scanner</button>'+
-    '<button class="btn-ghost btn-sm" id="pub-login-nav-btn">&#x1F511; Organiser Login</button>';
-  nav.querySelector('#pub-login-nav-btn').onclick=function(){ renderLogin(); };
-  nav.querySelector('#pub-scanner-nav-btn').onclick=function(){ renderPublicScanner(null); };
-
-  // Show loading state immediately so the page isn't blank
+  nav.style.display='none';
   var main=getEl('main');
-  main.innerHTML='<div style="text-align:center;padding:80px;color:#555"><div style="font-size:40px;margin-bottom:16px">&#x1F3AB;</div><div>Loading events…</div></div>';
-
-  // Fetch approved events — RLS also filters server-side but we add client filter for safety
+  main.className='pub-mode';
+  main.innerHTML='<div style="text-align:center;padding:80px;color:#333"><div style="font-size:40px;margin-bottom:16px">🎫</div><div>Loading events…</div></div>';
   _supa.from('events')
     .select('*')
-    .eq('approval_status', 'approved')
-    .order('date', { ascending: true })
+    .eq('approval_status','approved')
+    .order('date',{ascending:true})
     .then(function(result){
-      var evs = (result.data||[]).map(DB._normEvent);
-      _cache.events = evs;
-      _renderPublicHomeWithEvents(evs, now);
+      var evs=(result.data||[]).map(DB._normEvent);
+      _cache.events=evs;
+      _renderPublicHomeWithEvents(evs,now);
     })
-    .catch(function(err){
-      console.error('Failed to load events:', err);
-      _renderPublicHomeWithEvents([], now);
-    });
+    .catch(function(){_renderPublicHomeWithEvents([],new Date());});
 }
 function _renderPublicHomeWithEvents(allEvents, now){
-
   var devBanner=getEl('dev-banner'); if(devBanner) devBanner.style.display='none';
   var main=getEl('main');
+  main.className='pub-mode';
 
-  // ── Split events into upcoming and past ──────────────────────────────────────
   var upcoming=[], past=[];
   allEvents.forEach(function(ev){
     if(!ev.date){ upcoming.push(ev); return; }
     if(new Date(ev.date)>=now) upcoming.push(ev); else past.push(ev);
   });
-  // Sort upcoming ascending (soonest first), past descending (most recent first)
   upcoming.sort(function(a,b){ return new Date(a.date||0)-new Date(b.date||0); });
   past.sort(function(a,b){ return new Date(b.date||0)-new Date(a.date||0); });
 
-  function eventCard(ev, isPast){
-    var isApproved=(ev.approval_status||'draft')==='approved';
-    if(!isApproved){
-      // Show as Coming Soon — no booking, no seat map
-      var d2=ev.design||{}, ac2=d2.accentColor||'#e94560';
-      var dateStr2=ev.date?new Date(ev.date).toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'}):'';
-      var timeStr2=ev.date?new Date(ev.date).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}):'';
-      var html2='<div class="card" style="opacity:.7">';
-      html2+='<div class="card-accent-bar" style="background:#333"></div>';
-      html2+='<div class="card-body">';
-      html2+='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">';
-      html2+='<div style="font-size:17px;font-weight:800;line-height:1.2">'+ev.name+'</div>';
-      html2+='<span style="font-size:10px;padding:2px 9px;border-radius:20px;background:#1a1a1a;color:#555;border:1px solid #333;font-weight:700;white-space:nowrap;flex-shrink:0">COMING SOON</span>';
-      html2+='</div>';
-      if(dateStr2) html2+='<div style="font-size:12px;color:var(--text3);margin-bottom:3px">&#x1F4C5; '+dateStr2+' &nbsp;&bull;&nbsp; '+timeStr2+'</div>';
-      if(ev.venue) html2+='<div style="font-size:12px;color:var(--text4);margin-bottom:10px">&#x1F4CD; '+ev.venue+'</div>';
-      if(ev.description) html2+='<p style="font-size:12px;color:var(--text4);margin-bottom:12px;line-height:1.5">'+ev.description+'</p>';
-      html2+='<button class="btn-ghost btn-sm" style="width:100%;opacity:.5;cursor:default" disabled>&#x1F512; Not Yet Available</button>';
-      html2+='</div></div>';
-      return html2;
-    }
+  function fmtDate(dateStr){ if(!dateStr) return 'TBC'; return new Date(dateStr).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}); }
+  function fmtTime(dateStr){ if(!dateStr) return ''; return new Date(dateStr).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}); }
+
+  function posterCard(ev, isPast){
     var d=ev.design||{}, ac=d.accentColor||'#e94560';
     var allSeats=(_cache.seats||[]).filter(function(s){ return s.event_id===ev.id; });
     var available=allSeats.filter(function(s){ return s.status==='available'; }).length;
-    var sold=allSeats.filter(function(s){ return s.status==='sold'||s.status==='held'; }).length;
     var total=allSeats.length;
     var soldOut=(total>0&&available===0)||isPast;
     var almostFull=(!isPast&&total>0&&available>0&&available<total*0.15);
-    var statusColor=isPast?'var(--text5)':soldOut?'var(--accent)':almostFull?'var(--amber)':'var(--green)';
-    var statusLabel=isPast?'Past Event':soldOut&&!isPast?'Sold Out':almostFull?'Almost Full':'Available';
-    var dateStr=ev.date?new Date(ev.date).toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'}):'';
-    var timeStr=ev.date?new Date(ev.date).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}):'';
-    var html='<div class="card" style="'+(isPast?'opacity:.6':'') +'">';
-    html+='<div class="card-accent-bar" style="background:'+(isPast?'#333':ac)+'"></div>';
-    html+='<div class="card-body">';
-    html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">';
-    html+='<div style="font-size:17px;font-weight:800;line-height:1.2">'+ev.name+'</div>';
-    if(ev.category) html+='<span style="font-size:10px;padding:2px 8px;border-radius:20px;background:'+(isPast?'#22222288':''+ac+'22')+';color:'+(isPast?'#555':ac)+';font-weight:700;white-space:nowrap;flex-shrink:0">'+ev.category.toUpperCase()+'</span>';
-    html+='</div>';
-    if(dateStr) html+='<div style="font-size:12px;color:var(--text3);margin-bottom:3px">&#x1F4C5; '+dateStr+' &nbsp;&bull;&nbsp; '+timeStr+'</div>';
-    if(ev.venue) html+='<div style="font-size:12px;color:var(--text4);margin-bottom:10px">&#x1F4CD; '+ev.venue+'</div>';
-    if(ev.description) html+='<p style="font-size:12px;color:var(--text4);margin-bottom:12px;line-height:1.5">'+ev.description+'</p>';
-    if(total>0){
-      var soldPct=Math.round((isPast?total:sold)/total*100);
-      html+='<div style="margin-bottom:14px">';
-      html+='<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text4);margin-bottom:4px">';
-      html+='<span>Seat Availability</span><span style="color:'+statusColor+';font-weight:700">'+statusLabel+(!isPast&&available>0?' &mdash; '+available+' left':'')+'</span></div>';
-      html+='<div style="background:var(--bg3);border-radius:3px;height:6px;overflow:hidden">';
-      html+='<div style="width:'+soldPct+'%;height:100%;background:'+(isPast?'#333':ac)+';transition:width .4s"></div></div></div>';
-    } else if(!isPast&&ev.seatingMode==='free'&&ev.capacity>0){
-      html+='<div style="font-size:12px;color:var(--text4);margin-bottom:14px">&#x1F3B5; Free seating &mdash; '+ev.capacity+' capacity</div>';
-    } else if(!isPast){
-      html+='<div style="font-size:12px;color:var(--text4);margin-bottom:14px">&#x1F3B5; Open seating</div>';
-    }
-    html+='<div style="display:flex;gap:8px">';
-    if(!isPast){
-      if(soldOut&&!isPast){
-        html+='<button class="btn-ghost btn-sm" style="flex:1;color:var(--amber);border-color:#f59e0b44" data-pub-waitlist="'+ev.id+'">&#x23F3; Join Waitlist</button>';
-      } else {
-        html+='<button class="btn-primary btn-sm" style="flex:1" data-pub-open="'+ev.id+'">&#x1F3AB; View &amp; Book</button>';
-      }
-      html+='<button class="btn-ghost btn-sm" title="Scanner for this event" data-pub-scan="'+ev.id+'">&#x1F4F7;</button>';
-    } else {
-      html+='<button class="btn-ghost btn-sm" style="flex:1;opacity:.5;cursor:default" disabled>&#x23F1; Event Ended</button>';
-    }
-    html+='</div>';
-    html+='</div></div>';
-    return html;
+    var badgeBg=isPast?'#333':soldOut?'#e9456088':almostFull?'#f59e0b88':'#22c55e88';
+    var badgeColor=isPast?'#666':soldOut?'#fff':almostFull?'#fff':'#fff';
+    var badgeLabel=isPast?'ENDED':soldOut?'SOLD OUT':almostFull?'ALMOST FULL':'AVAILABLE';
+    var imgHtml=ev.poster
+      ?'<img src="'+ev.poster+'" style="width:100%;height:100%;object-fit:cover">'
+      :'<div class="pub-pcard-ph" style="background:linear-gradient(135deg,'+ac+'22,'+ac+'55,#0d0d0d)">🎫</div>';
+    var h='<div class="pub-pcard" data-pub-open="'+ev.id+'">';
+    h+='<div class="pub-pcard-img">'+imgHtml;
+    h+='<span class="pub-pcard-badge" style="background:'+badgeBg+';color:'+badgeColor+'">'+badgeLabel+'</span>';
+    h+='</div>';
+    h+='<div class="pub-pcard-label">';
+    h+='<div class="pub-pcard-title" title="'+ev.name+'">'+ev.name+'</div>';
+    h+='<div class="pub-pcard-date">'+(ev.date?fmtDate(ev.date):'TBC')+'</div>';
+    h+='</div></div>';
+    return h;
   }
 
   var html='';
 
-  // ── Hero / login CTA ─────────────────────────────────────────────────────────
-  html+='<div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:32px 28px;margin-bottom:32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">';
-  html+='<div>';
-  html+='<div style="font-family:Impact,sans-serif;font-size:26px;color:var(--accent);letter-spacing:3px;margin-bottom:6px">&#x25C6; TICKR</div>';
-  html+='<div style="font-size:15px;font-weight:700;margin-bottom:4px">Book your tickets</div>';
-  html+='<div style="font-size:13px;color:var(--text4)">Browse events below and reserve your seats online.</div>';
+  // ── Cinema-style Nav ─────────────────────────────────────────────────────────
+  html+='<div class="pub-cinema-nav">';
+  html+='<span class="pub-cinema-logo" id="pub-logo-home">&#x25C6; TICKR</span>';
+  html+='<span style="flex:1"></span>';
+  html+='<button class="btn-ghost btn-sm" id="pub-home-scanner-btn">&#x1F4F7; Scanner</button>';
+  html+='<button class="btn-primary btn-sm" id="pub-home-login-btn">&#x1F511; Organiser Login</button>';
   html+='</div>';
-  html+='<div style="display:flex;gap:10px;flex-wrap:wrap">';
-  html+='<button class="btn-ghost" id="pub-home-scanner-btn">&#x1F4F7; Scanner</button>';
-  html+='<button class="btn-primary" id="pub-home-login-btn">&#x1F511; Organiser Login</button>';
-  html+='</div></div>';
 
   if(!allEvents.length){
-    html+='<div style="text-align:center;padding:60px 0;color:var(--text4)"><div style="font-size:56px;margin-bottom:16px">&#x1F3AB;</div><div style="font-size:18px">No upcoming events</div></div>';
+    html+='<div class="pub-empty"><div style="font-size:56px;margin-bottom:16px">🎫</div><div style="font-size:20px;font-weight:700;color:#444;margin-bottom:8px">No Events Yet</div><div style="font-size:14px;color:#333">Check back soon for upcoming events.</div></div>';
     main.innerHTML=html;
-    // Still wire nav buttons even with no events
-    if(main._pubClickHandler) main.removeEventListener('click', main._pubClickHandler);
-    main._pubClickHandler = function(e){
-      var t=e.target.closest('#pub-home-login-btn'); if(t){ e.preventDefault(); renderLogin(); return; }
-      t=e.target.closest('#pub-home-scanner-btn'); if(t){ e.preventDefault(); renderPublicScanner(null); return; }
-    };
-    main.addEventListener('click', main._pubClickHandler);
+    wirePubHome(main);
     return;
   }
 
-  // ── Upcoming events ──────────────────────────────────────────────────────────
+  // ── Hero (first upcoming event) ──────────────────────────────────────────────
+  var featured=upcoming[0]||past[0];
+  if(featured){
+    var fd=featured.design||{}, fac=featured.design&&featured.design.accentColor||'#e94560';
+    var bgStyle=featured.poster?'background-image:url('+featured.poster+')':'background:linear-gradient(135deg,'+fac+'22,#0d0d0d)';
+    html+='<div class="pub-hero-section">';
+    html+='<div class="pub-hero-bg" style="'+bgStyle+'"></div>';
+    html+='<div class="pub-hero-vgrad"></div>';
+    html+='<div class="pub-hero-body">';
+    if(featured.poster){
+      html+='<img class="pub-hero-poster" src="'+featured.poster+'" alt="'+featured.name+'">';
+    } else {
+      html+='<div class="pub-hero-poster-ph" style="background:linear-gradient(135deg,'+fac+'22,#111)">🎫</div>';
+    }
+    html+='<div class="pub-hero-text">';
+    if(featured.category) html+='<span class="pub-hero-cat" style="background:'+fac+'22;color:'+fac+';border:1px solid '+fac+'44">'+featured.category.toUpperCase()+'</span>';
+    html+='<div class="pub-hero-title">'+featured.name+'</div>';
+    html+='<div class="pub-hero-meta">';
+    if(featured.date) html+='<span>&#x1F4C5; '+fmtDate(featured.date)+' &nbsp;'+fmtTime(featured.date)+'</span>';
+    if(featured.venue) html+='<span>&#x1F4CD; '+featured.venue+'</span>';
+    html+='</div>';
+    var isPastFeatured=featured.date&&new Date(featured.date)<now;
+    if(!isPastFeatured){
+      var allSeatsFeat=(_cache.seats||[]).filter(function(s){ return s.event_id===featured.id; });
+      var soldOutFeat=allSeatsFeat.length>0&&allSeatsFeat.filter(function(s){ return s.status==='available'; }).length===0;
+      if(soldOutFeat){
+        html+='<button class="btn-ghost" style="color:var(--amber);border-color:#f59e0b44" data-pub-waitlist="'+featured.id+'">&#x23F3; Join Waitlist</button>';
+      } else {
+        html+='<button class="btn-primary" data-pub-open="'+featured.id+'" style="background:'+fac+';border:none">&#x1F3AB; Book Now</button>';
+      }
+    }
+    html+='</div></div></div></div>';
+  }
+
+  // ── NOW SHOWING / UPCOMING row ───────────────────────────────────────────────
   if(upcoming.length>0){
-    html+='<div class="page-header" style="margin-bottom:16px"><div><h2 class="page-title" style="font-size:22px">Upcoming Events</h2><p class="page-subtitle">'+upcoming.length+' event'+(upcoming.length!==1?'s':'')+' available</p></div></div>';
-    html+='<div class="events-grid" style="margin-bottom:36px">';
-    upcoming.forEach(function(ev){ html+=eventCard(ev, false); });
-    html+='</div>';
+    html+='<div class="pub-row-wrap">';
+    html+='<div class="pub-row-head">NOW SHOWING &amp; UPCOMING</div>';
+    html+='<div class="pub-scroll">';
+    upcoming.forEach(function(ev){ html+=posterCard(ev,false); });
+    html+='</div></div>';
   }
 
-  // ── Past events ──────────────────────────────────────────────────────────────
+  // ── PAST EVENTS row ──────────────────────────────────────────────────────────
   if(past.length>0){
-    html+='<div style="font-size:13px;color:var(--text4);letter-spacing:2px;font-weight:700;text-transform:uppercase;margin-bottom:16px;padding-top:8px;border-top:1px solid var(--border)">Past Events</div>';
-    html+='<div class="events-grid">';
-    past.forEach(function(ev){ html+=eventCard(ev, true); });
-    html+='</div>';
+    html+='<div class="pub-row-wrap" style="margin-top:12px">';
+    html+='<div class="pub-row-head">PAST EVENTS</div>';
+    html+='<div class="pub-scroll">';
+    past.forEach(function(ev){ html+=posterCard(ev,true); });
+    html+='</div></div>';
   }
 
+  html+='<div style="height:60px"></div>';
   main.innerHTML=html;
+  wirePubHome(main);
+}
 
-  // Single delegated listener — handles all public home button clicks
-  if(main._pubClickHandler) main.removeEventListener('click', main._pubClickHandler);
-  main._pubClickHandler = function(e){
+function wirePubHome(main){
+  if(main._pubClickHandler) main.removeEventListener('click',main._pubClickHandler);
+  main._pubClickHandler=function(e){
     var t;
-    t = e.target.closest('[data-pub-open]');
-    if(t){
-      e.preventDefault(); e.stopPropagation();
-      var evId = t.getAttribute('data-pub-open');
-      console.log('[TICKR] View & Book clicked, eventId=', evId);
-      renderPublicEvent(evId).catch(function(err){ console.error('[TICKR] renderPublicEvent failed:', err); alert('Error opening event: ' + err.message); });
-      return;
-    }
-    t = e.target.closest('[data-pub-scan]');
-    if(t){ e.preventDefault(); renderPublicScanner(t.getAttribute('data-pub-scan')); return; }
-    t = e.target.closest('[data-pub-waitlist]');
-    if(t){
-      e.preventDefault();
-      var wlEvId=t.getAttribute('data-pub-waitlist');
-      var wlEv=(_cache.events||[]).find(function(e){ return e.id===wlEvId; });
-      if(wlEv) showWaitlistForm(wlEv);
-      return;
-    }
-    t = e.target.closest('#pub-home-login-btn');
-    if(t){ e.preventDefault(); renderLogin(); return; }
-    t = e.target.closest('#pub-home-scanner-btn');
-    if(t){ e.preventDefault(); renderPublicScanner(null); return; }
+    t=e.target.closest('#pub-home-login-btn'); if(t){ e.preventDefault(); renderLogin(); return; }
+    t=e.target.closest('#pub-home-scanner-btn'); if(t){ e.preventDefault(); renderPublicScanner(null); return; }
+    t=e.target.closest('#pub-logo-home'); if(t){ e.preventDefault(); renderPublicHome(); return; }
+    t=e.target.closest('[data-pub-open]');
+    if(t){ e.preventDefault(); e.stopPropagation(); renderPublicEvent(t.getAttribute('data-pub-open')).catch(function(err){ console.error(err); }); return; }
+    t=e.target.closest('[data-pub-scan]'); if(t){ e.preventDefault(); renderPublicScanner(t.getAttribute('data-pub-scan')); return; }
+    t=e.target.closest('[data-pub-waitlist]');
+    if(t){ e.preventDefault(); var wlEv=(_cache.events||[]).find(function(e){ return e.id===t.getAttribute('data-pub-waitlist'); }); if(wlEv) showWaitlistForm(wlEv); return; }
   };
-  main.addEventListener('click', main._pubClickHandler);
-  console.log('[TICKR] Public home wired, events count=', allEvents.length);
+  main.addEventListener('click',main._pubClickHandler);
 }  // end _renderPublicHomeWithEvents
 
 // ═══════════════════════════════════════════════════════════════════════════════
